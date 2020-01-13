@@ -1,0 +1,183 @@
+Title: HW 5: Graphs - The Six Degrees of Kevin Bacon
+Name : Rosa Vitiello
+COMP 15 Data Structures Fall 2018
+
+--------------------------------------------------------------------------------
+//////////////////////////// * ACKNOWLEDGMENTS * ///////////////////////////////
+--------------------------------------------------------------------------------
+
+                     Some help from Piazza COMP 15 posts
+
+--------------------------------------------------------------------------------
+//////////////////////////////// * PURPOSE * ///////////////////////////////////
+--------------------------------------------------------------------------------
+
+    This folder contains an implementation of Graph BFS traversal. 
+    The purpose of this program is to take a file full of actor
+    information and convert that data into a graph. Then, using a graph
+    data structure, simulate "Six Degrees of Kevin Bacon" -- take user input
+    of two actors and report the shortest distance of common movies between
+    the two actors according to data from actors.txt
+
+--------------------------------------------------------------------------------
+///////////////////////////////// * FILES * ////////////////////////////////////
+--------------------------------------------------------------------------------
+
+main.cpp            : main driver of the project. Creates and runs an instance 
+                      of SixDegrees. Takes in an optional inputFile in command
+                      line
+
+SixDegrees.cpp      : SixDegrees class which runs "Six Degrees of Kevin Bacon"
+                      (as described in COMP 15 specifications)
+
+Six Degrees.h.      : interface of SixDegrees class above
+
+Graph.cpp           : graph class with extra helping tools to run DFS
+
+Graph.h             : interface of graph class above
+
+Actor.cpp           : actor class which stores and actor and a list of his/her
+                      movies + other useful public functions
+
+Actor.h             : interface of actor class above
+
+LinkedList.cpp      : simple template linked list class used for DFS
+
+LinkedList.h        : interface of Linked list class above
+
+NodeType.h          : interface of Nodetype class (a simple struct used in the 
+                      linked list class)
+
+Stack.cpp           : simple template stack class used for DFS
+
+Stack.h             : interface of Stack class above
+
+Queue.cpp           : simple template queue class used for DFS
+
+Queue.h             : interface of Queue class above
+
+actors.txt          : sample list of actors and the movies they have been in
+
+test_input.txt      : sample test input for the algorithm
+
+expected_output.txt : output that your assignment should give on test_input.txt
+
+test-graph.cpp      : tests graph data structure for Six Degrees class
+
+Makefile            : tool to compile program quickly
+
+README              : this file
+
+--------------------------------------------------------------------------------
+//////////////////////////////// * COMPILING * /////////////////////////////////
+--------------------------------------------------------------------------------
+
+    SixDegrees simulation
+        compile: make sixdegrees [filename]
+        run:     ./sixdegrees
+
+    Graph test
+        compile: make test-graph
+        run:     ./test-graph
+
+--------------------------------------------------------------------------------
+///////////////////////// * STRUCTURES & ALGORITHMS * //////////////////////////
+--------------------------------------------------------------------------------
+    
+    Graph Data Structure - Graph data structure used to find the shortest path 
+                           between two actors
+
+                           Implemented with dynamic arrays (for vertices and 
+                           path) and an adjacency matrix (for edges) 
+
+        Advantages:
+            • Fits the structure of the data very well (actors are connected
+              to other actors by movies)
+            • BFS alogrithm for finding shortest path between an actor is 
+              easy to code and more efficient than any other data structure
+              as it is easy to traverse through connection to connection
+              (much unlike say a DA, LL, BTS, Trie, etc. etc.)
+            • Access time with an adjacency matrix on whether edges exist
+              is constant time O(n)
+              - Better than an LL implementation, especially in this graph
+                in which many actors have many connections to other actors
+
+        Disadvantages:
+            • Adjacency matrix takes up |v|^2 space, where v is the num of 
+              vertices
+              - For this program it is ok because we are looking at a reasonable
+                number of actors -- don't really have a sparse graph, so don't
+                need too worry to much
+              - A LL implmentation would waste less space; however, the time
+                complexity for retrieving actors would be longer
+
+
+    BFS Algorithm - used to calculate shortest path
+        • Used BFS algorithm to find the shortest path between two actors
+        • For an unweighted graph, the BFS algorithm finds the shortest path
+          as it checks first paths "level by level"
+          - Traverse first node, check neighbors of first node for shortest 
+            path, then neighbors of neighors, (etc. etc.)
+
+        • Disadvantages to this algorithm checking for shortest path is that
+          its functionality is limited to only unweighted graphs
+        • Other disadvantages: 
+          - Can consume large memory space (all nodes from 
+          each level stored before going onto the next)
+          - Time complexity is longer if a solution is "far away"
+
+--------------------------------------------------------------------------------
+//////////////////////////////// * TESTING * ///////////////////////////////////
+--------------------------------------------------------------------------------
+
+    Actor Class - (unit testing)
+        • Unit tests actor class with a seperate driver which could not be 
+          provided for view. Documentation of tests written below:
+
+          - Default and parameterized constructor:
+            • Tested to make sure both constructors created and actor correctly
+          - add_movie and connect
+            • Added some movies to a couple of actors
+            • Made sure that an appropriate movie was returned when actors had
+              a common movie (tested cases both when there were multiple
+              common movies and only one common movie)
+            • Tested connect returns and empty string when no connection
+          - operator overloads
+            • <<        : made sure actor name was printed correctly
+            • == and != : used if statements with various actors to test that
+                          logic for operators correct
+
+    Graph Class - (unit testing)
+        • See test-graph.cpp for detailed documentation of unit tests
+
+    Six Degrees Class - (many inputs and outputs targeting edge cases)
+        • Tested small cases with a smaller test file first
+            - Often used smaller test files for these tests
+              The following edge cases with stdin and stdout were tested:
+
+              1) An actor to himself or herself only prints a co-star dist of 0
+                 ex. Hilary Duff & Hilary Duff
+
+              2) Two actors with a costar distance of 1,2,3,4, ...
+                 ex. Hilary Duff & Steve Martin (1)
+                     Jennifer Lawrence & Meryl Streep (2)
+                     Lucy Liu & Robert Downy Jr. (3)
+                     Hilary Duff & Jamie Foxx (4)
+                     Cary Elwes & Sean Connery (6)
+
+              3) Two actors who have been in multiple movies together
+                 ex. Jon Favreau & Robert Downey Jr. (Chef or Iron Man)
+
+              4) Asking for an invalid input for the first input
+              5) Asking for an invalid input for the second input
+
+              6) Two actors with no connection
+                 ex. Allison Janney & Jamie Foxx
+
+              7) Two actors with multiple paths to each other (shortest path
+                 should be printed)
+                 ex. Jon Favreau & Matthew McConaughey
+
+            - Used diff with test_input.txt > myouput.txt and expected_output
+
+        • Ran valgrind to ensure that there were no memory leaks or errors
