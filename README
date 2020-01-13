@@ -70,10 +70,6 @@ README              : this file
         compile: make sixdegrees [filename]
         run:     ./sixdegrees
 
-    Graph test
-        compile: make test-graph
-        run:     ./test-graph
-
 --------------------------------------------------------------------------------
 ///////////////////////// * STRUCTURES & ALGORITHMS * //////////////////////////
 --------------------------------------------------------------------------------
