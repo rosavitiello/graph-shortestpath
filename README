@@ -67,8 +67,8 @@ README              : this file
 --------------------------------------------------------------------------------
 
     SixDegrees simulation
-        compile: make sixdegrees [filename]
-        run:     ./sixdegrees
+        compile: make sixdegrees
+        run:     ./sixdegrees [filename]
 
 --------------------------------------------------------------------------------
 ///////////////////////// * STRUCTURES & ALGORITHMS * //////////////////////////
